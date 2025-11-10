@@ -1,0 +1,206 @@
+.history-page {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 2rem;
+}
+
+.history-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.history-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.history-header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.history-header p {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.empty-state {
+  background: white;
+  border-radius: 12px;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state h2 {
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.empty-state p {
+  color: #666;
+  margin: 0 0 2rem 0;
+}
+
+.start-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.start-button:hover {
+  transform: scale(1.05);
+}
+
+.conversations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.conversation-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.conversation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.conversation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.conversation-header h3 {
+  margin: 0 0 0.25rem 0;
+  color: #333;
+  font-size: 1.25rem;
+}
+
+.conversation-date {
+  margin: 0;
+  color: #999;
+  font-size: 0.85rem;
+}
+
+.score-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.conversation-stats {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.conversation-summary {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.conversation-summary h4 {
+  margin: 0 0 0.75rem 0;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.conversation-summary p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.strength {
+  color: #10b981;
+}
+
+.suggestion {
+  color: #667eea;
+}
+
+.retry-button {
+  background: transparent;
+  border: 2px solid #667eea;
+  color: #667eea;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.retry-button:hover {
+  background: #667eea;
+  color: white;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .history-page {
+    padding: 1rem;
+  }
+
+  .history-header h1 {
+    font-size: 2rem;
+  }
+
+  .conversation-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .score-badge {
+    align-self: flex-start;
+  }
+}
