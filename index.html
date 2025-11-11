@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>협상 시뮬레이터 - AI 기반 협상 연습 플랫폼</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent-color: #ec4899;
+            --text-dark: #0f172a;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --bg-dark: #1e293b;
+            --border-color: #e2e8f0;
+            --success-color: #10b981;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 0;
+        }
+
+        nav h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 0 5rem;
+            background: linear-gradient(135deg, #1e3a8a 0%, #312e81 50%, #4c1d95 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="60" fill="none" stroke="white" stroke-width="1" opacity="0.1"/></svg>');
+            opacity: 0.2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            text-align: left;
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            color: #fbbf24;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            color: #e0e7ff;
+            max-width: 600px;
+            margin: 0 0 2.5rem 0;
+            line-height: 1.7;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #fef3c7;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 0;
+        }
+
+        section:nth-child(even) {
+            background: var(--bg-light);
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 1.2rem;
+            margin-bottom: 4rem;
+        }
+
+        /* About Section */
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .about-content p {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: var(--text-light);
+            margin-bottom: 1.8rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .skill-category {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--border-color);
+        }
+
+        .skill-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .skill-category h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .skill-tag:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Project Section */
+        .project-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .project-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .project-header h3 {
+            font-size: 2.3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .project-header p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        .project-section {
+            margin-bottom: 4rem;
+        }
+
+        .project-section h4 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .project-section p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--text-light);
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .feature-card h5 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-card p {
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-badge {
+            background: var(--bg-light);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .bullet-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .bullet-list li {
+            padding: 0.7rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--text-light);
+            font-size: 1.05rem;
+        }
+
+        .bullet-list li:before {
+            content: "✓";
+            color: var(--success-color);
+            font-size: 1.3rem;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            transition: transform 0.3s;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .result-card h6 {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-card p {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .architecture {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        /* Contact Section */
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.2rem 2.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-dark);
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.1rem;
+            }
+
+            nav ul {
+                gap: 1.5rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feature-card, .skill-category, .result-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <h1>💬 협상 시뮬레이터</h1>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#project">Project</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h2>김영우</h2>
+            <p class="subtitle">동양미래대학교 컴퓨터소프트웨어공학과 3학년</p>
+            <div class="hero-badges">
+                <span class="badge">React 18 + Vite</span>
+                <span class="badge">Node.js + Express</span>
+                <span class="badge">Claude AI API</span>
+                <span class="badge">Firebase Auth & Firestore</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <p class="section-subtitle">개발자 소개</p>
+            <div class="about-content">
+                <p>
+                    [첫 번째 문단: 본인의 개발 철학과 강점을 서술하세요.
+                    예: 저는 비즈니스 문제를 기술로 해결하는 과정에 매력을 느끼는 개발자입니다.
+                    특히 React와 TypeScript를 활용하여...]
+                </p>
+                <p>
+                    [두 번째 문단: 이 프로젝트를 통해 특히 보여주고 싶은 역량을 서술하세요.
+                    예: 이 협상 시뮬레이터 프로젝트를 통해 AI API 통합부터 풀스택 개발까지...]
+                </p>
+                <p>
+                    [세 번째 문단: 추가 소개 내용을 자유롭게 작성하세요.
+                    예: 현재는 사용자 중심의 웹 애플리케이션 개발에 집중하고 있으며...]
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Project Section -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">About This Project</h2>
+            <p class="section-subtitle">사용자 경험과 AI 기술의 융합</p>
+            <div class="about-content">
+                <p>
+                    협상 시뮬레이터는 <strong>Claude AI를 활용한 혁신적인 협상 연습 플랫폼</strong>입니다.
+                    실제 협상 상황을 시뮬레이션하여 사용자들이 안전한 환경에서 협상 기술을 연습하고 향상시킬 수 있도록 설계되었습니다.
+                </p>
+                <p>
+                    이 프로젝트를 통해 <strong>프론트엔드부터 백엔드, AI API 통합, 그리고 사용자 인증/데이터베이스 관리까지</strong>
+                    풀스택 개발 역량을 종합적으로 보여주고자 했습니다. 특히 React의 최신 기능, RESTful API 설계,
+                    그리고 Claude AI의 강력한 대화 능력을 효과적으로 결합하는 데 중점을 두었습니다.
+                </p>
+                <div class="highlight-box">
+                    <p style="margin: 0; color: var(--text-dark); font-weight: 500;">
+                        💡 <strong>핵심 가치:</strong> 단순한 기술 구현을 넘어, 사용자가 실제로 협상 스킬을 향상시킬 수 있는
+                        교육적 가치를 제공하는 플랫폼을 만들고자 했습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills">
+        <div class="container">
+            <h2 class="section-title">Technology Stack</h2>
+            <p class="section-subtitle">프로젝트에 사용된 기술</p>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>🎨 Frontend</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">React 18</span>
+                        <span class="skill-tag">Vite</span>
+                        <span class="skill-tag">React Router</span>
+                        <span class="skill-tag">Axios</span>
+                        <span class="skill-tag">CSS3</span>
+                        <span class="skill-tag">Firebase SDK</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>⚙️ Backend</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Node.js</span>
+                        <span class="skill-tag">Express</span>
+                        <span class="skill-tag">RESTful API</span>
+                        <span class="skill-tag">Claude AI API</span>
+                        <span class="skill-tag">Firebase Admin</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>🗄️ Database & Auth</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Firestore</span>
+                        <span class="skill-tag">Firebase Authentication</span>
+                        <span class="skill-tag">Google OAuth</span>
+                        <span class="skill-tag">JWT Tokens</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Section -->
+    <section id="project">
+        <div class="container project-container">
+            <div class="project-header">
+                <h2 class="section-title">Project Details</h2>
+                <h3>협상 시뮬레이터</h3>
+                <p>AI 기반 협상 연습 플랫폼</p>
+            </div>
+
+            <!-- 문제 정의 -->
+            <div class="project-section">
+                <h4>📌 문제 정의 & 목표</h4>
+                <p>
+                    협상 기술은 비즈니스와 일상생활에서 필수적인 역량이지만, 실전 경험을 쌓기 어려운 분야입니다.
+                    기존의 협상 교육은 <strong>이론 중심</strong>이거나, 실습 기회가 제한적이어서 실제 상황에 적용하기 어렵다는 문제가 있습니다.
+                </p>
+                <p>
+                    이 프로젝트는 <strong>Claude AI의 자연스러운 대화 능력을 활용</strong>하여, 사용자가 언제든지 다양한 협상 시나리오를
+                    연습하고 즉각적인 피드백을 받을 수 있는 플랫폼을 제공하는 것을 목표로 했습니다.
+                    특히 5가지 현실적인 시나리오(연봉협상, 계약협상, 프로젝트 관리 등)를 통해 실전 감각을 키울 수 있도록 설계했습니다.
+                </p>
+            </div>
+
+            <!-- 아키텍처/설계 -->
+            <div class="project-section">
+                <h4>🏗️ 아키텍처 & 설계</h4>
+                <p>
+                    프로젝트는 <strong>클라이언트-서버 분리 아키텍처</strong>로 설계되었습니다.
+                    React 기반 SPA(Single Page Application)로 프론트엔드를 구성하고, Node.js/Express로 RESTful API 서버를 구축했습니다.
+                </p>
+                <div class="architecture">
+                    <ul class="bullet-list">
+                        <li><strong>Frontend (React + Vite):</strong> 빠른 개발 환경과 최적화된 번들링을 위해 Vite를 선택. React Router로 SPA 라우팅 구현</li>
+                        <li><strong>Backend (Node.js + Express):</strong> RESTful API 서버로 클라이언트 요청 처리 및 Claude AI API 통신 담당</li>
+                        <li><strong>Claude AI Integration:</strong> Anthropic SDK를 활용하여 자연스러운 협상 대화 및 실시간 피드백 생성</li>
+                        <li><strong>Firebase:</strong> Authentication (이메일/Google OAuth)과 Firestore (대화 기록, 사용자 데이터) 통합</li>
+                        <li><strong>상태 관리:</strong> React Context API로 전역 인증 상태 관리, Axios로 API 통신 추상화</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 핵심 기능 1 -->
+            <div class="feature-card">
+                <h5>🤖 AI 기반 실시간 협상 시뮬레이션</h5>
+                <p>
+                    Claude AI의 <strong>대화 능력을 활용한 현실적인 협상 상대 구현</strong>이 핵심입니다.
+                    각 시나리오마다 고유한 NPC 프로필(역할, 성격, 목표, 제약사항)을 설정하여, AI가 일관된 캐릭터로 대화를 진행합니다.
+                </p>
+                <p>
+                    백엔드에서는 <code>claudeService.js</code>를 통해 System Prompt를 동적으로 생성하고,
+                    대화 히스토리를 관리하여 맥락을 유지합니다. 프론트엔드는 실시간으로 메시지를 주고받으며,
+                    타이핑 인디케이터로 자연스러운 대화 경험을 제공합니다.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-badge">Claude API 3.5 Sonnet</span>
+                    <span class="tech-badge">React Hooks</span>
+                    <span class="tech-badge">Axios</span>
+                    <span class="tech-badge">Real-time Messaging</span>
+                </div>
+            </div>
+
+            <!-- 핵심 기능 2 -->
+            <div class="feature-card">
+                <h5>📊 협상 성과 분석 & 피드백 시스템</h5>
+                <p>
+                    대화가 끝난 후 "분석 보기" 버튼을 통해 <strong>AI가 협상 과정을 종합적으로 평가</strong>합니다.
+                    협상 점수(100점 만점), 강점, 약점, 개선 제안, 사용된 전략 등을 구조화된 데이터로 제공하여
+                    사용자가 자신의 협상 스킬을 객관적으로 파악할 수 있습니다.
+                </p>
+                <p>
+                    분석 기능은 별도의 API 엔드포인트(<code>/api/conversation/analyze</code>)로 구현되어,
+                    Claude AI에게 전체 대화 맥락과 함께 분석 요청을 전송합니다.
+                    프론트엔드는 모달 UI로 분석 결과를 시각적으로 표현합니다.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-badge">AI Analysis</span>
+                    <span class="tech-badge">Modal UI</span>
+                    <span class="tech-badge">Structured Data</span>
+                    <span class="tech-badge">Score Visualization</span>
+                </div>
+            </div>
+
+            <!-- 핵심 기능 3 -->
+            <div class="feature-card">
+                <h5>🔐 사용자 인증 & 대화 기록 관리</h5>
+                <p>
+                    <strong>Firebase Authentication</strong>을 통해 이메일/비밀번호 및 Google OAuth 로그인을 지원합니다.
+                    React Context API로 전역 인증 상태를 관리하고, Private Route로 보호된 페이지 접근을 제어합니다.
+                </p>
+                <p>
+                    모든 협상 대화는 <strong>Firestore</strong>에 자동 저장되어, 사용자가 언제든지 과거 대화 내역을 조회할 수 있습니다.
+                    서버에서는 Firebase Admin SDK를 사용하여 ID Token을 검증하고, 사용자별 데이터를 안전하게 관리합니다.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-badge">Firebase Auth</span>
+                    <span class="tech-badge">Firestore</span>
+                    <span class="tech-badge">Context API</span>
+                    <span class="tech-badge">JWT Verification</span>
+                    <span class="tech-badge">Private Routes</span>
+                </div>
+            </div>
+
+            <!-- 개발 과정 & 구현 내용 -->
+            <div class="project-section">
+                <h4>👨‍💻 개발 과정 & 구현 내용</h4>
+                <ul class="bullet-list">
+                    <li><strong>풀스택 개발:</strong> 프론트엔드(React)부터 백엔드(Node.js/Express)까지 전체 아키텍처 설계 및 구현</li>
+                    <li><strong>AI API 통합:</strong> Claude AI API를 연동하여 동적 System Prompt 생성 및 대화 히스토리 관리 로직 구현</li>
+                    <li><strong>Firebase 통합:</strong> Authentication 및 Firestore 데이터베이스 설계, 실시간 데이터 동기화 구현</li>
+                    <li><strong>사용자 인증 시스템:</strong> React Context를 활용한 전역 인증 상태 관리, Private Route 보호 구현</li>
+                    <li><strong>RESTful API 설계:</strong> 시나리오 관리, 대화 처리, 분석 기능을 위한 8개의 API 엔드포인트 설계 및 구현</li>
+                    <li><strong>UI/UX 디자인:</strong> 직관적인 대화 인터페이스, 모달 기반 분석 결과 표시, 반응형 디자인 구현</li>
+                    <li><strong>시나리오 시스템 설계:</strong> 5가지 협상 시나리오의 NPC 프로필, 목표, 팁 등 데이터 모델링</li>
+                </ul>
+            </div>
+
+            <!-- 결과 및 성과 -->
+            <div class="project-section">
+                <h4>📊 프로젝트 성과</h4>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h6>시나리오</h6>
+                        <p>5가지 협상 상황</p>
+                    </div>
+                    <div class="result-card">
+                        <h6>기능 구현</h6>
+                        <p>8개 API 엔드포인트</p>
+                    </div>
+                    <div class="result-card">
+                        <h6>인증 시스템</h6>
+                        <p>Firebase 완전 통합</p>
+                    </div>
+                    <div class="result-card">
+                        <h6>AI 응답</h6>
+                        <p>2-5초 실시간 대화</p>
+                    </div>
+                </div>
+                <ul class="bullet-list" style="margin-top: 2rem;">
+                    <li>풀스택 웹 애플리케이션 완성: 프론트엔드부터 백엔드, 데이터베이스까지 전체 개발 완료</li>
+                    <li>Claude AI API 성공적 통합: 자연스러운 대화 및 분석 기능 구현</li>
+                    <li>Firebase 기반 사용자 관리: 인증, 데이터 저장, 실시간 동기화 구현</li>
+                    <li>직관적인 UX: 채팅 UI, 실시간 타이핑 인디케이터, 모달 분석 화면 등</li>
+                </ul>
+            </div>
+
+            <!-- 회고 -->
+            <div class="project-section">
+                <h4>💭 회고 & 향후 계획</h4>
+                <div class="feature-card">
+                    <h5>✅ 배운 점</h5>
+                    <p>
+                        이 프로젝트를 통해 <strong>AI API를 실제 서비스에 통합하는 전체 과정</strong>을 경험했습니다.
+                        특히 Claude AI의 System Prompt 설계와 대화 맥락 관리의 중요성을 깊이 이해하게 되었습니다.
+                        또한 Firebase의 다양한 서비스(Auth, Firestore)를 실전에서 활용하며,
+                        클라우드 기반 백엔드 설계 역량을 크게 향상시켰습니다.
+                    </p>
+                    <p>
+                        React Context API를 활용한 전역 상태 관리, RESTful API 설계 원칙, 그리고 사용자 인증 플로우 구현 등
+                        풀스택 개발자로서 필요한 핵심 역량들을 실무 수준으로 체득할 수 있었습니다.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <h5>🎯 향후 개선 계획</h5>
+                    <ul class="bullet-list">
+                        <li><strong>협상 점수 시스템:</strong> 시나리오별 목표 달성도를 정량화하여 사용자의 성장을 추적</li>
+                        <li><strong>커스텀 시나리오:</strong> 사용자가 직접 협상 상황을 만들고 공유할 수 있는 기능</li>
+                        <li><strong>대시보드 강화:</strong> 협상 통계, 성장 그래프, 강약점 분석 등 상세한 인사이트 제공</li>
+                        <li><strong>테스트 코드:</strong> Jest와 React Testing Library를 활용한 단위/통합 테스트 추가</li>
+                        <li><strong>성능 최적화:</strong> React.memo, useMemo 등을 활용한 렌더링 최적화</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title">Contact</h2>
+            <p class="section-subtitle">프로젝트에 대해 더 알고 싶으시거나 협업을 원하시면 연락주세요</p>
+            <div class="contact-links">
+                <a href="https://github.com/hppYW" target="_blank" class="contact-btn">
+                    💻 GitHub
+                </a>
+                <a href="mailto:[duddnkim1212@gmail.com]" class="contact-btn">
+                    📧 Email
+                </a>
+                
+            </div>
+            <div style="margin-top: 3rem; text-align: center; color: var(--text-light);">
+                <p><strong>🔗 프로젝트 GitHub 링크:</strong></p>
+                <p style="margin-top: 0.5rem;">
+                    <a href="https://github.com/hppYW/Gen-AI" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">
+                        github.com/hppYW/Gen-AI
+                    </a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 협상 시뮬레이터. All rights reserved.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">Built with React, Node.js, and Claude AI</p>
+        </div>
+    </footer>
+</body>
+</html>
