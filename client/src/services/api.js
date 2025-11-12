@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { auth } from '../config/firebase';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
@@ -9,21 +8,6 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-// Add auth token to requests
-api.interceptors.request.use(
-  async (config) => {
-    const user = auth.currentUser;
-    if (user) {
-      const token = await user.getIdToken();
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 // Scenario APIs
 export const scenarioAPI = {
@@ -70,11 +54,6 @@ export const conversationAPI = {
       conversationHistory,
       scenarioId,
     });
-    return response.data;
-  },
-
-  saveConversation: async (conversationData) => {
-    const response = await api.post('/conversation/save', conversationData);
     return response.data;
   },
 };

@@ -1,5 +1,4 @@
 import claudeService from '../services/claudeService.js';
-import firestoreService from '../services/firestoreService.js';
 import { getScenarioById } from '../models/scenarios.js';
 
 class ConversationController {
@@ -111,75 +110,6 @@ class ConversationController {
     } catch (error) {
       console.error('Analyze conversation error:', error);
       res.status(500).json({ error: 'Failed to analyze conversation' });
-    }
-  }
-
-  /**
-   * Save conversation to Firestore
-   */
-  async saveConversation(req, res) {
-    try {
-      const {
-        conversationId,
-        scenarioId,
-        scenarioTitle,
-        messages,
-        analysis,
-        finalScore,
-        duration,
-      } = req.body;
-
-      if (!req.user) {
-        return res.status(401).json({ error: 'User not authenticated' });
-      }
-
-      const conversationData = {
-        conversationId,
-        scenarioId,
-        scenarioTitle,
-        messages,
-        analysis,
-        finalScore,
-        duration,
-      };
-
-      const saved = await firestoreService.saveConversation(
-        req.user.uid,
-        conversationData
-      );
-
-      res.json({
-        success: true,
-        conversation: saved,
-      });
-    } catch (error) {
-      console.error('Save conversation error:', error);
-      res.status(500).json({ error: 'Failed to save conversation' });
-    }
-  }
-
-  /**
-   * Get user's conversation history
-   */
-  async getConversationHistory(req, res) {
-    try {
-      if (!req.user) {
-        return res.status(401).json({ error: 'User not authenticated' });
-      }
-
-      const limit = parseInt(req.query.limit) || 20;
-      const conversations = await firestoreService.getUserConversations(
-        req.user.uid,
-        limit
-      );
-
-      res.json({
-        conversations,
-        total: conversations.length,
-      });
-    } catch (error) {
-      console.error('Get conversation history error:', error);
-      res.status(500).json({ error: 'Failed to get conversation history' });
     }
   }
 }

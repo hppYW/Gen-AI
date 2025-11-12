@@ -1,35 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import localStorageService from '../services/localStorage';
 import './HistoryPage.css';
 
 function HistoryPage() {
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { currentUser } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     loadConversations();
-  }, [currentUser]);
+  }, []);
 
-  async function loadConversations() {
+  function loadConversations() {
     try {
       setLoading(true);
-      const q = query(
-        collection(db, 'conversations'),
-        where('userId', '==', currentUser.uid),
-        orderBy('createdAt', 'desc')
-      );
-
-      const querySnapshot = await getDocs(q);
-      const conversationsData = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
+      const conversationsData = localStorageService.getAllConversations();
       setConversations(conversationsData);
     } catch (error) {
       console.error('Failed to load conversations:', error);
@@ -38,9 +24,16 @@ function HistoryPage() {
     }
   }
 
+  function handleDelete(conversationId) {
+    if (window.confirm('이 대화 기록을 삭제하시겠습니까?')) {
+      localStorageService.deleteConversation(conversationId);
+      loadConversations();
+    }
+  }
+
   function formatDate(timestamp) {
     if (!timestamp) return '';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const date = new Date(timestamp);
     return date.toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: 'long',
@@ -138,12 +131,20 @@ function HistoryPage() {
                   </div>
                 )}
 
-                <button
-                  className="retry-button"
-                  onClick={() => navigate(`/negotiate/${conversation.scenarioId}`)}
-                >
-                  다시 연습하기
-                </button>
+                <div className="conversation-actions">
+                  <button
+                    className="retry-button"
+                    onClick={() => navigate(`/negotiate/${conversation.scenarioId}`)}
+                  >
+                    다시 연습하기
+                  </button>
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDelete(conversation.conversationId)}
+                  >
+                    삭제
+                  </button>
+                </div>
               </div>
             ))}
           </div>

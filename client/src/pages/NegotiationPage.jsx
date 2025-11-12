@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { scenarioAPI, conversationAPI } from '../services/api';
+import localStorageService from '../services/localStorage';
 import './NegotiationPage.css';
 
 function NegotiationPage() {
@@ -132,6 +133,32 @@ function NegotiationPage() {
     } catch (error) {
       console.error('Failed to analyze conversation:', error);
       alert('분석에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
+  const handleSaveConversation = () => {
+    try {
+      if (!analysis) {
+        alert('먼저 분석을 실행해주세요.');
+        return;
+      }
+
+      const conversationData = {
+        conversationId,
+        scenarioId,
+        scenarioTitle: scenario.title,
+        messages,
+        analysis,
+        finalScore: analysis.negotiationScore,
+        duration: 0, // Could calculate based on timestamps if needed
+      };
+
+      localStorageService.saveConversation(conversationData);
+      alert('대화가 저장되었습니다!');
+      setShowAnalysis(false);
+    } catch (error) {
+      console.error('Failed to save conversation:', error);
+      alert('저장에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -290,6 +317,15 @@ function NegotiationPage() {
                   <li key={index}>{tactic}</li>
                 ))}
               </ul>
+            </div>
+
+            <div className="analysis-actions">
+              <button className="save-button" onClick={handleSaveConversation}>
+                대화 저장
+              </button>
+              <button className="close-modal-button" onClick={() => setShowAnalysis(false)}>
+                닫기
+              </button>
             </div>
           </div>
         </div>
