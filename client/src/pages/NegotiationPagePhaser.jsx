@@ -31,10 +31,12 @@ function NegotiationPagePhaser() {
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [messageFeedback, setMessageFeedback] = useState(null);
   const [suggestionUsageCount, setSuggestionUsageCount] = useState(0);
+  const [usedSuggestionThisTurn, setUsedSuggestionThisTurn] = useState(false);
   const MAX_SUGGESTION_USES = 3;
 
   const initialMessagesRef = useRef([]);
   const initialEmotionRef = useRef(null);
+  const handleOpenInputRef = useRef(null);
 
   useEffect(() => {
     initializeConversation();
@@ -193,12 +195,19 @@ function NegotiationPagePhaser() {
       if (response.messageFeedback) {
         setMessageFeedback(response.messageFeedback);
       }
+
+      // 선택지를 사용했으면 횟수 증가
+      if (usedSuggestionThisTurn) {
+        setSuggestionUsageCount(prev => prev + 1);
+        setUsedSuggestionThisTurn(false);
+      }
     } catch (error) {
       console.error('Failed to send message:', error);
       alert('메시지 전송에 실패했습니다. 다시 시도해주세요.');
       if (gameSceneRef.current) {
         gameSceneRef.current.hideLoading();
       }
+      setUsedSuggestionThisTurn(false); // 실패 시에도 리셋
     } finally {
       setSending(false);
     }
@@ -229,7 +238,7 @@ function NegotiationPagePhaser() {
   const handleSuggestionClick = (suggestionText) => {
     soundManager.playButtonClick();
     setInputMessage(suggestionText);
-    setSuggestionUsageCount(prev => prev + 1);
+    setUsedSuggestionThisTurn(true); // 선택지 사용 표시
   };
 
   const handleOpenInput = useCallback(async () => {
@@ -251,7 +260,13 @@ function NegotiationPagePhaser() {
         content: msg.content,
       }));
 
-      console.log('🔍 Requesting suggestions...', { scenarioId, historyLength: conversationHistory.length });
+      console.log('🔍 Requesting suggestions...', {
+        scenarioId,
+        historyLength: conversationHistory.length,
+        userMessages: conversationHistory.filter(m => m.role === 'user').length,
+        messages: messages.length,
+        lastMessage: messages.length > 0 ? messages[messages.length - 1] : 'none'
+      });
       const response = await conversationAPI.getSuggestions(conversationHistory, scenarioId);
       console.log('✅ Suggestions received:', response);
       setSuggestions(response.suggestions || []);
@@ -263,6 +278,18 @@ function NegotiationPagePhaser() {
       setLoadingSuggestions(false);
     }
   }, [messages, scenarioId, suggestionUsageCount]);
+
+  // ref에 최신 handleOpenInput 저장
+  useEffect(() => {
+    handleOpenInputRef.current = handleOpenInput;
+  }, [handleOpenInput]);
+
+  // PhaserGame에 전달할 안정적인 함수
+  const stableHandleOpenInput = useCallback(() => {
+    if (handleOpenInputRef.current) {
+      handleOpenInputRef.current();
+    }
+  }, []);
 
   const handleAnalyze = async () => {
     soundManager.playButtonClick();
@@ -381,7 +408,7 @@ function NegotiationPagePhaser() {
           <PhaserGame
             scenario={scenario}
             onGameReady={handleGameReady}
-            onInput={handleOpenInput}
+            onInput={stableHandleOpenInput}
             width={1400}
             height={900}
             key="phaser-game-instance"
