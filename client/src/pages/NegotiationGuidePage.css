@@ -1,0 +1,446 @@
+.guide-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+}
+
+.guide-header {
+  text-align: center;
+  color: white;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.guide-header .back-button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.guide-header .back-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateX(-5px);
+}
+
+.guide-header h1 {
+  font-size: 3rem;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.guide-header .subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin-top: 0.5rem;
+}
+
+/* Tabs */
+.guide-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.tab {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.tab:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.tab.active {
+  background: white;
+  color: #667eea;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Content */
+.guide-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  padding: 3rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  min-height: 600px;
+}
+
+.tab-content h2 {
+  color: #667eea;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Principle Cards */
+.principle-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  border-left: 5px solid #667eea;
+}
+
+.principle-card h3 {
+  color: #667eea;
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+.principle-card ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.principle-card li {
+  margin: 0.75rem 0;
+  line-height: 1.6;
+}
+
+.principle-card strong {
+  color: #667eea;
+}
+
+/* Techniques Grid */
+.techniques-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.technique-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 15px;
+  padding: 2rem;
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.technique-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.technique-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.technique-icon {
+  font-size: 2.5rem;
+}
+
+.technique-card h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.technique-description {
+  font-weight: 600;
+  opacity: 0.9;
+  margin-bottom: 1rem;
+}
+
+.technique-details {
+  opacity: 0.85;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.technique-example {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+/* Tips Grid */
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.tip-card {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border-radius: 15px;
+  padding: 2rem;
+  color: white;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.tip-card:hover {
+  transform: scale(1.05);
+}
+
+.tip-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.tip-card h3 {
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+}
+
+.tip-card p {
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+/* Dialogue Examples */
+.dialogue-examples {
+  margin-top: 3rem;
+}
+
+.dialogue-examples h3 {
+  color: #667eea;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.example-comparison {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.bad-example,
+.good-example {
+  border-radius: 15px;
+  padding: 1.5rem;
+}
+
+.bad-example {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+}
+
+.good-example {
+  background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+  color: white;
+}
+
+.bad-example h4,
+.good-example h4 {
+  margin-top: 0;
+  font-size: 1.3rem;
+}
+
+.dialogue {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.dialogue p {
+  margin: 0.75rem 0;
+  line-height: 1.6;
+}
+
+.explanation {
+  font-style: italic;
+  opacity: 0.9;
+  margin-top: 1rem;
+}
+
+/* Mistakes Grid */
+.mistakes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.mistake-card {
+  background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+  border-radius: 15px;
+  padding: 2rem;
+  text-align: center;
+  border: 3px solid #f39c12;
+  transition: transform 0.3s ease;
+}
+
+.mistake-card:hover {
+  transform: translateY(-5px);
+}
+
+.mistake-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.mistake-card h3 {
+  color: #d35400;
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+}
+
+.mistake-card p {
+  color: #7f5539;
+  line-height: 1.6;
+}
+
+/* Warning Box */
+.warning-box {
+  background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
+  color: white;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.warning-box h3 {
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+.warning-box ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.warning-box li {
+  margin: 0.75rem 0;
+  line-height: 1.6;
+}
+
+/* Scenario Cards */
+.guide-scenario-card {
+  background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+  color: white;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.guide-scenario-card:hover {
+  transform: translateX(10px);
+}
+
+.guide-scenario-card h3 {
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+.guide-scenario-card ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.guide-scenario-card li {
+  margin: 0.75rem 0;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+/* Footer */
+.guide-footer {
+  max-width: 1200px;
+  margin: 3rem auto 0;
+}
+
+.cta-box {
+  background: white;
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.cta-box h3 {
+  color: #667eea;
+  font-size: 2rem;
+  margin-top: 0;
+}
+
+.cta-box p {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 1rem 0 2rem;
+}
+
+.start-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 1.25rem 3rem;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.start-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .guide-page {
+    padding: 1rem;
+  }
+
+  .guide-header h1 {
+    font-size: 2rem;
+  }
+
+  .guide-content {
+    padding: 1.5rem;
+  }
+
+  .techniques-grid,
+  .tips-grid,
+  .mistakes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .example-comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-tabs {
+    gap: 0.5rem;
+  }
+
+  .tab {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+}

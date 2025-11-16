@@ -1,0 +1,124 @@
+.star-rating-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.stars-display {
+  display: flex;
+  gap: 5px;
+}
+
+.star {
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.star.filled {
+  opacity: 1;
+  animation: star-pop 0.5s ease backwards;
+  filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.8));
+}
+
+.star.empty {
+  opacity: 0.3;
+  filter: grayscale(100%);
+}
+
+.star.small {
+  font-size: 16px;
+}
+
+.star.medium {
+  font-size: 24px;
+}
+
+.star.large {
+  font-size: 32px;
+}
+
+@keyframes star-pop {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+.star.filled:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.star.filled:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.star.filled:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.star.filled:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.star.filled:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.rating-label {
+  font-size: 16px;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  animation: fade-in 0.5s ease 0.6s backwards;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rating-label.rating-5 {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+}
+
+.rating-label.rating-4 {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(74, 222, 128, 0.4);
+}
+
+.rating-label.rating-3 {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.4);
+}
+
+.rating-label.rating-2 {
+  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(251, 146, 60, 0.4);
+}
+
+.rating-label.rating-1 {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}

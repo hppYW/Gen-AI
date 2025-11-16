@@ -1,0 +1,47 @@
+.phaser-game-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+  overflow: hidden;
+  min-height: 600px;
+  position: relative;
+}
+
+.phaser-game {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.phaser-game canvas {
+  display: block !important;
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(102, 126, 234, 0.3);
+}
+
+/* Canvas가 로드되면 로딩 텍스트 숨김 */
+.phaser-game-container:has(canvas)::before {
+  display: none;
+}
+
+.phaser-game-container::before {
+  content: '🎮 게임 초기화 중...';
+  position: absolute;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.2rem;
+  font-weight: bold;
+  z-index: 0;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}

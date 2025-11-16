@@ -10,6 +10,9 @@ function Navbar() {
         </Link>
 
         <div className="navbar-menu">
+          <Link to="/guide" className="navbar-link">
+            📚 협상 가이드
+          </Link>
           <Link to="/scenarios" className="navbar-link">
             시나리오
           </Link>

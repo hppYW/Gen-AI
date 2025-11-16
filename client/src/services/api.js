@@ -49,6 +49,14 @@ export const conversationAPI = {
     return response.data;
   },
 
+  getSuggestions: async (conversationHistory, scenarioId) => {
+    const response = await api.post('/conversation/suggestions', {
+      conversationHistory,
+      scenarioId,
+    });
+    return response.data;
+  },
+
   analyzeConversation: async (conversationHistory, scenarioId) => {
     const response = await api.post('/conversation/analyze', {
       conversationHistory,
