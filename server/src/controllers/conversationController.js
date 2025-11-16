@@ -102,6 +102,12 @@ class ConversationController {
     try {
       const { conversationHistory, scenarioId } = req.body;
 
+      console.log('📥 getSuggestions called:', {
+        scenarioId,
+        historyLength: conversationHistory ? conversationHistory.length : 0,
+        userMessages: conversationHistory ? conversationHistory.filter(m => m.role === 'user').length : 0
+      });
+
       if (!scenarioId) {
         return res.status(400).json({ error: 'scenarioId is required' });
       }
@@ -116,6 +122,8 @@ class ConversationController {
         scenario,
         scenario.npcProfile
       );
+
+      console.log('📤 Returning suggestions:', suggestions.suggestions?.length || 0, 'items');
 
       res.json({
         suggestions: suggestions.suggestions || [],

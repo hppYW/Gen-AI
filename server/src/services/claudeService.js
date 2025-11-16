@@ -389,26 +389,32 @@ ${conversationHistory.length > 0 ? conversationHistory[conversationHistory.lengt
 각각 다른 접근 방식(우호적, 직접적, 탐색적 등)을 제시해주세요.`;
       } else {
         // 두 번째 이후: 사용자의 이전 대화 스타일 기반
-        const userStyle = userMessages.map(msg => msg.content).join('\n');
+        const userStyle = userMessages.map((msg, idx) => `${idx + 1}. "${msg.content}"`).join('\n');
         const lastNPCMessage = conversationHistory.filter(msg => msg.role === 'assistant').pop();
+        const lastUserMessage = userMessages[userMessages.length - 1];
 
-        suggestPrompt = `다음은 진행 중인 협상 대화입니다:
+        suggestPrompt = `당신은 협상 코치입니다. 사용자의 다음 응답을 추천해주세요.
 
-**시나리오**: ${scenario.title}
-**상대방 역할**: ${npcProfile.role}
-**사용자 목표**: ${scenario.userGoals ? scenario.userGoals.join(', ') : '협상 성공'}
+**현재 상황**:
+- 시나리오: ${scenario.title}
+- 상대방: ${npcProfile.role}
+- 사용자 목표: ${scenario.userGoals ? scenario.userGoals.join(', ') : '협상 성공'}
+- 현재까지 대화 횟수: ${userMessages.length}회
 
-**최근 대화 히스토리** (최신순):
-${conversationHistory.slice(-6).map((msg) => `${msg.role === 'user' ? '👤 사용자' : '🤖 NPC'}: ${msg.content}`).join('\n\n')}
+**전체 대화 흐름**:
+${conversationHistory.map((msg, idx) => `[${idx + 1}] ${msg.role === 'user' ? '사용자' : 'NPC'}: ${msg.content}`).join('\n')}
 
-**사용자의 이전 대화 패턴**:
+**사용자가 지금까지 한 말들**:
 ${userStyle}
 
-**NPC의 마지막 발언**:
-${lastNPCMessage ? lastNPCMessage.content : '(없음)'}
+**NPC가 방금 한 말** (이것에 대해 응답해야 함):
+"${lastNPCMessage ? lastNPCMessage.content : '(없음)'}"
 
-위 대화 맥락과 사용자의 대화 스타일을 분석하여, NPC의 마지막 발언에 대한 효과적인 응답 3가지를 추천하세요.
-사용자의 협상 목표를 달성하는 데 도움이 되는, 서로 다른 전략의 응답을 제시해주세요.`;
+**중요**:
+1. NPC의 마지막 발언 "${lastNPCMessage ? lastNPCMessage.content.substring(0, 50) : ''}..."에 직접 대응하는 응답을 만드세요
+2. 사용자의 이전 대화 스타일(${lastUserMessage ? '예: "' + lastUserMessage.content.substring(0, 30) + '..."' : ''})을 참고하되, 대화 진행에 맞게 발전시키세요
+3. 각 추천은 서로 다른 협상 전략을 사용해야 합니다
+4. 추천 응답은 구체적이고 실제 대화에서 바로 사용할 수 있어야 합니다`;
       }
 
       suggestPrompt += `
@@ -425,10 +431,12 @@ ${lastNPCMessage ? lastNPCMessage.content : '(없음)'}
 5. 마지막 항목 뒤에 쉼표 금지
 6. approach는 간단하게 한 단어로 (예: "우호적", "직접적", "탐색적")`;
 
+      console.log('📤 Sending suggestion prompt (first 200 chars):', suggestPrompt.substring(0, 200));
+
       const response = await this.client.messages.create({
         model: 'claude-sonnet-4-5',
-        max_tokens: 800,
-        temperature: 0.7,
+        max_tokens: 1000,
+        temperature: 0.9,
         messages: [{
           role: 'user',
           content: suggestPrompt
@@ -436,7 +444,7 @@ ${lastNPCMessage ? lastNPCMessage.content : '(없음)'}
       });
 
       const suggestText = response.content[0].text;
-      console.log('📝 Raw suggestion response:', suggestText);
+      console.log('📝 Raw suggestion response:', suggestText.substring(0, 500));
 
       // 여러 방법으로 JSON 추출 및 정제 시도
       let parsed = null;
