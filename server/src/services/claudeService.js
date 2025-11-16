@@ -287,22 +287,23 @@ NPC 최신 응답: ${latestResponse}
     try {
       const analysisPrompt = `다음 협상 대화를 분석하고 피드백을 제공하세요:
 
-${conversationHistory.map((msg, i) => `${i % 2 === 0 ? '사용자' : 'AI'}: ${msg.content}`).join('\n')}
+${conversationHistory.map((msg, i) => `${msg.role === 'user' ? '사용자' : 'NPC'}: ${msg.content}`).join('\n')}
 
-최신 응답: ${latestResponse}
+반드시 아래 JSON 형식으로만 응답하세요. 각 배열에는 최소 2개 이상의 항목을 포함해주세요:
 
-다음 항목을 JSON 형식으로 분석하세요:
-{
-  "negotiationScore": 0-100 점수,
-  "strengths": ["강점1", "강점2"],
-  "weaknesses": ["약점1", "약점2"],
-  "suggestions": ["개선사항1", "개선사항2"],
-  "tactics": ["사용된 전략1", "사용된 전략2"]
-}`;
+{"negotiationScore":75,"strengths":["강점1","강점2"],"weaknesses":["약점1","약점2"],"suggestions":["개선사항1","개선사항2"],"tactics":["전략1","전략2"]}
+
+중요한 규칙:
+1. 오직 JSON만 출력하고 다른 텍스트나 설명을 절대 포함하지 마세요
+2. 마크다운 코드 블록을 사용하지 마세요
+3. negotiationScore는 0-100 사이 숫자
+4. 각 배열(strengths, weaknesses, suggestions, tactics)에 최소 2개 항목 필수
+5. 모든 문자열은 큰따옴표로 감싸기
+6. 마지막 항목 뒤에 쉼표 금지`;
 
       const response = await this.client.messages.create({
         model: 'claude-sonnet-4-5',
-        max_tokens: 512,
+        max_tokens: 1024,
         messages: [{
           role: 'user',
           content: analysisPrompt
@@ -310,39 +311,47 @@ ${conversationHistory.map((msg, i) => `${i % 2 === 0 ? '사용자' : 'AI'}: ${ms
       });
 
       const analysisText = response.content[0].text;
-      const jsonMatch = analysisText.match(/\{[\s\S]*\}/);
+      console.log('📝 Raw analysis response:', analysisText);
+
+      // 마크다운 코드 블록 제거
+      let cleanedText = analysisText.replace(/```json\s*/g, '').replace(/```\s*/g, '');
+      const jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
 
       if (jsonMatch) {
         try {
-          return JSON.parse(jsonMatch[0]);
+          const parsed = JSON.parse(jsonMatch[0]);
+          console.log('✅ Parsed analysis:', parsed);
+
+          // 배열이 비어있으면 기본값 제공
+          return {
+            negotiationScore: parsed.negotiationScore || 50,
+            strengths: parsed.strengths && parsed.strengths.length > 0 ? parsed.strengths : ['협상에 참여했습니다', '대화를 시도했습니다'],
+            weaknesses: parsed.weaknesses && parsed.weaknesses.length > 0 ? parsed.weaknesses : ['더 많은 연습이 필요합니다', '전략을 다양화할 필요가 있습니다'],
+            suggestions: parsed.suggestions && parsed.suggestions.length > 0 ? parsed.suggestions : ['다양한 협상 전략을 시도해보세요', '상대방의 입장을 더 고려해보세요'],
+            tactics: parsed.tactics && parsed.tactics.length > 0 ? parsed.tactics : ['기본적인 대화', '직접적인 접근']
+          };
         } catch (parseError) {
           console.error('❌ JSON Parse Error in analysis:', parseError);
-          return {
-            negotiationScore: 50,
-            strengths: [],
-            weaknesses: [],
-            suggestions: [],
-            tactics: []
-          };
+          console.error('Failed JSON string:', jsonMatch[0].substring(0, 300));
         }
       }
 
       console.warn('⚠️ No JSON found in analysis response');
       return {
         negotiationScore: 50,
-        strengths: [],
-        weaknesses: [],
-        suggestions: [],
-        tactics: []
+        strengths: ['협상에 참여했습니다', '대화를 시도했습니다'],
+        weaknesses: ['더 많은 연습이 필요합니다', '전략을 다양화할 필요가 있습니다'],
+        suggestions: ['다양한 협상 전략을 시도해보세요', '상대방의 입장을 더 고려해보세요'],
+        tactics: ['기본적인 대화', '직접적인 접근']
       };
     } catch (error) {
       console.error('❌ Analysis Error:', error);
       return {
         negotiationScore: 50,
-        strengths: [],
-        weaknesses: [],
-        suggestions: [],
-        tactics: []
+        strengths: ['협상에 참여했습니다', '대화를 시도했습니다'],
+        weaknesses: ['더 많은 연습이 필요합니다', '전략을 다양화할 필요가 있습니다'],
+        suggestions: ['다양한 협상 전략을 시도해보세요', '상대방의 입장을 더 고려해보세요'],
+        tactics: ['기본적인 대화', '직접적인 접근']
       };
     }
   }
@@ -354,6 +363,12 @@ ${conversationHistory.map((msg, i) => `${i % 2 === 0 ? '사용자' : 'AI'}: ${ms
     try {
       const userMessages = conversationHistory.filter(msg => msg.role === 'user');
       const isFirstSuggestion = userMessages.length === 0;
+
+      console.log('🎯 Generating suggestions:', {
+        isFirst: isFirstSuggestion,
+        userMessageCount: userMessages.length,
+        totalMessages: conversationHistory.length
+      });
 
       let suggestPrompt;
 
@@ -367,27 +382,33 @@ ${scenario.description}
 **상대방 역할**: ${npcProfile.role}
 **상대방 성격**: ${npcProfile.personality}
 
-**대화 히스토리**:
-${conversationHistory.slice(-2).map((msg, i) => `${msg.role === 'user' ? '사용자' : 'NPC'}: ${msg.content}`).join('\n')}
+**NPC의 첫 인사**:
+${conversationHistory.length > 0 ? conversationHistory[conversationHistory.length - 1].content : '(대화 시작)'}
 
 시나리오의 목표와 상황에 맞는 자연스러운 시작 대화 3가지를 추천하세요.
 각각 다른 접근 방식(우호적, 직접적, 탐색적 등)을 제시해주세요.`;
       } else {
         // 두 번째 이후: 사용자의 이전 대화 스타일 기반
         const userStyle = userMessages.map(msg => msg.content).join('\n');
+        const lastNPCMessage = conversationHistory.filter(msg => msg.role === 'assistant').pop();
+
         suggestPrompt = `다음은 진행 중인 협상 대화입니다:
 
 **시나리오**: ${scenario.title}
 **상대방 역할**: ${npcProfile.role}
+**사용자 목표**: ${scenario.userGoals ? scenario.userGoals.join(', ') : '협상 성공'}
 
-**최근 대화 히스토리**:
-${conversationHistory.slice(-6).map((msg, i) => `${msg.role === 'user' ? '사용자' : 'NPC'}: ${msg.content}`).join('\n')}
+**최근 대화 히스토리** (최신순):
+${conversationHistory.slice(-6).map((msg) => `${msg.role === 'user' ? '👤 사용자' : '🤖 NPC'}: ${msg.content}`).join('\n\n')}
 
-**사용자의 이전 대화들**:
+**사용자의 이전 대화 패턴**:
 ${userStyle}
 
-위 사용자의 대화 스타일, 어조, 협상 패턴을 분석하여, 사용자가 다음에 할 것 같은 자연스러운 응답 3가지를 추천하세요.
-사용자가 지금까지 보여준 스타일을 유지하면서도 협상을 발전시킬 수 있는 응답을 제시해주세요.`;
+**NPC의 마지막 발언**:
+${lastNPCMessage ? lastNPCMessage.content : '(없음)'}
+
+위 대화 맥락과 사용자의 대화 스타일을 분석하여, NPC의 마지막 발언에 대한 효과적인 응답 3가지를 추천하세요.
+사용자의 협상 목표를 달성하는 데 도움이 되는, 서로 다른 전략의 응답을 제시해주세요.`;
       }
 
       suggestPrompt += `

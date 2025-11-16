@@ -346,8 +346,8 @@ function NegotiationPagePhaser() {
         <button className="ui-button back-btn" onClick={() => navigate('/scenarios')}>
           ← 나가기
         </button>
-        <button className="ui-button analyze-btn" onClick={handleAnalyze}>
-          📊 분석
+        <button className="ui-button finish-btn" onClick={handleAnalyze}>
+          🏁 협상 마무리
         </button>
       </div>
 
