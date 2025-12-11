@@ -162,6 +162,12 @@
   color: #667eea;
 }
 
+.conversation-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
 .retry-button {
   background: transparent;
   border: 2px solid #667eea;
@@ -171,11 +177,27 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 100%;
+  flex: 1;
 }
 
 .retry-button:hover {
   background: #667eea;
+  color: white;
+}
+
+.delete-button {
+  background: transparent;
+  border: 2px solid #ef4444;
+  color: #ef4444;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.delete-button:hover {
+  background: #ef4444;
   color: white;
 }
 

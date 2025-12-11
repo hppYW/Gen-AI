@@ -9,6 +9,9 @@ router.post('/start', conversationController.startConversation);
 // Send a message
 router.post('/message', conversationController.sendMessage);
 
+// Get suggested responses
+router.post('/suggestions', conversationController.getSuggestions);
+
 // Analyze conversation
 router.post('/analyze', conversationController.analyzeConversation);
 
