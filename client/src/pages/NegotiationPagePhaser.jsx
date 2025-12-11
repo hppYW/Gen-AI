@@ -32,6 +32,7 @@ function NegotiationPagePhaser() {
   const [messageFeedback, setMessageFeedback] = useState(null);
   const [suggestionUsageCount, setSuggestionUsageCount] = useState(0);
   const [usedSuggestionThisTurn, setUsedSuggestionThisTurn] = useState(false);
+  const [analyzingLoading, setAnalyzingLoading] = useState(false);
   const MAX_SUGGESTION_USES = 3;
 
   const initialMessagesRef = useRef([]);
@@ -293,6 +294,7 @@ function NegotiationPagePhaser() {
 
   const handleAnalyze = async () => {
     soundManager.playButtonClick();
+    setAnalyzingLoading(true);
     try {
       const conversationHistory = messages.map((msg) => ({
         role: msg.role === 'user' ? 'user' : 'assistant',
@@ -310,6 +312,8 @@ function NegotiationPagePhaser() {
       console.error('Failed to analyze conversation:', error);
       soundManager.playError();
       alert('분석에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setAnalyzingLoading(false);
     }
   };
 
@@ -585,6 +589,18 @@ function NegotiationPagePhaser() {
           achievement={newAchievement}
           onClose={() => setNewAchievement(null)}
         />
+      )}
+
+      {/* Analyzing Loading Overlay */}
+      {analyzingLoading && (
+        <div className="analyzing-overlay">
+          <div className="analyzing-container">
+            <div className="analyzing-spinner"></div>
+            <h3>🔍 협상 분석 중...</h3>
+            <p>AI가 당신의 협상을 분석하고 있습니다</p>
+            <p className="analyzing-subtext">잠시만 기다려주세요</p>
+          </div>
+        </div>
       )}
     </div>
   );

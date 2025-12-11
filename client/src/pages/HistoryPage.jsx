@@ -103,14 +103,6 @@ function HistoryPage() {
                     <span className="stat-label">메시지 수</span>
                     <span className="stat-value">{conversation.messageCount || 0}</span>
                   </div>
-                  <div className="stat">
-                    <span className="stat-label">소요 시간</span>
-                    <span className="stat-value">
-                      {conversation.duration
-                        ? `${Math.floor(conversation.duration / 60)}분`
-                        : '-'}
-                    </span>
-                  </div>
                 </div>
 
                 {conversation.analysis && (
