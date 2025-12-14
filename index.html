@@ -15,12 +15,19 @@
             --primary-color: #6366f1;
             --primary-dark: #4f46e5;
             --accent-color: #ec4899;
+            --accent-light: #f472b6;
+            --game-color: #8b5cf6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
             --text-dark: #0f172a;
             --text-light: #64748b;
             --bg-light: #f8fafc;
             --bg-dark: #1e293b;
             --border-color: #e2e8f0;
-            --success-color: #10b981;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-game: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
         }
 
         body {
@@ -97,7 +104,7 @@
         /* Hero Section */
         .hero {
             padding: 6rem 0 5rem;
-            background: linear-gradient(135deg, #1e3a8a 0%, #312e81 50%, #4c1d95 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             position: relative;
             overflow: hidden;
         }
@@ -110,7 +117,13 @@
             right: 0;
             bottom: 0;
             background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="60" fill="none" stroke="white" stroke-width="1" opacity="0.1"/></svg>');
-            opacity: 0.2;
+            opacity: 0.3;
+            animation: bgMove 20s linear infinite;
+        }
+
+        @keyframes bgMove {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(60px) translateY(60px); }
         }
 
         .hero-content {
@@ -121,19 +134,21 @@
         }
 
         .hero h2 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: 1rem;
-            font-weight: 800;
-            color: #fbbf24;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            letter-spacing: -1px;
         }
 
         .hero .subtitle {
-            font-size: 1.2rem;
-            color: #e0e7ff;
+            font-size: 1.3rem;
+            color: #f3e8ff;
             max-width: 600px;
             margin: 0 0 2.5rem 0;
-            line-height: 1.7;
+            line-height: 1.8;
+            font-weight: 500;
         }
 
         .hero-badges {
@@ -144,14 +159,21 @@
         }
 
         .badge {
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.2);
             backdrop-filter: blur(10px);
-            padding: 0.6rem 1.2rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #fef3c7;
-            border: 1px solid rgba(251, 191, 36, 0.3);
+            padding: 0.7rem 1.4rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        .badge:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         /* Section Styles */
@@ -164,18 +186,22 @@
         }
 
         .section-title {
-            font-size: 2.8rem;
+            font-size: 3rem;
             margin-bottom: 1rem;
             text-align: center;
-            color: var(--text-dark);
-            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         .section-subtitle {
             text-align: center;
             color: var(--text-light);
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             margin-bottom: 4rem;
+            font-weight: 500;
         }
 
         /* About Section */
@@ -211,24 +237,56 @@
         .skill-category {
             background: white;
             padding: 2.5rem;
-            border-radius: 16px;
+            border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .skill-category:hover::before {
+            transform: scaleX(1);
+        }
+
+        .skill-category:nth-child(1)::before {
+            background: var(--gradient-1);
+        }
+
+        .skill-category:nth-child(2)::before {
+            background: var(--gradient-game);
+        }
+
+        .skill-category:nth-child(3)::before {
+            background: var(--gradient-2);
         }
 
         .skill-category:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            border-color: var(--border-color);
         }
 
         .skill-category h3 {
-            color: var(--primary-color);
+            color: var(--text-dark);
             margin-bottom: 1.5rem;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
+            font-weight: 700;
         }
 
         .skill-tags {
@@ -238,20 +296,23 @@
         }
 
         .skill-tag {
-            background: linear-gradient(135deg, #667eea15, #764ba215);
-            padding: 0.6rem 1.2rem;
-            border-radius: 25px;
+            background: linear-gradient(135deg, #f0f4ff, #e0e7ff);
+            padding: 0.65rem 1.3rem;
+            border-radius: 30px;
             font-size: 0.95rem;
             color: var(--text-dark);
-            font-weight: 500;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s;
+            font-weight: 600;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
         }
 
         .skill-tag:hover {
-            background: var(--primary-color);
+            background: var(--gradient-1);
             color: white;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         /* Project Section */
@@ -301,25 +362,58 @@
         .feature-card {
             background: white;
             padding: 2.5rem;
-            border-radius: 16px;
+            border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             margin-bottom: 2rem;
-            border: 1px solid var(--border-color);
-            transition: transform 0.3s;
+            border-left: 5px solid var(--primary-color);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-1);
+            transition: width 0.3s;
         }
 
         .feature-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-card:hover::before {
+            width: 100%;
+            opacity: 0.05;
+        }
+
+        .feature-card:nth-child(2)::before {
+            background: var(--gradient-game);
+        }
+
+        .feature-card:nth-child(3)::before {
+            background: var(--gradient-2);
+        }
+
+        .feature-card:nth-child(4)::before {
+            background: var(--gradient-3);
         }
 
         .feature-card h5 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            color: var(--text-dark);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
         }
 
         .feature-card p {
@@ -372,31 +466,71 @@
         }
 
         .result-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-1);
             color: white;
-            padding: 2rem;
-            border-radius: 16px;
+            padding: 2.5rem;
+            border-radius: 20px;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-            transition: transform 0.3s;
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.6s;
+        }
+
+        .result-card:hover::before {
+            transform: scale(1);
+        }
+
+        .result-card:nth-child(1) {
+            background: var(--gradient-game);
+        }
+
+        .result-card:nth-child(2) {
+            background: var(--gradient-1);
+        }
+
+        .result-card:nth-child(3) {
+            background: var(--gradient-2);
+        }
+
+        .result-card:nth-child(4) {
+            background: var(--gradient-3);
         }
 
         .result-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.5);
         }
 
         .result-card h6 {
-            font-size: 0.95rem;
+            font-size: 1rem;
             margin-bottom: 1rem;
-            opacity: 0.9;
+            opacity: 0.95;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
         }
 
         .result-card p {
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-size: 2rem;
+            font-weight: 800;
             color: white;
+            position: relative;
+            z-index: 1;
         }
 
         .architecture {
@@ -418,21 +552,42 @@
         .contact-btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 1.2rem 2.5rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            gap: 0.6rem;
+            padding: 1.3rem 2.8rem;
+            background: var(--gradient-1);
             color: white;
             text-decoration: none;
             border-radius: 50px;
-            font-weight: 600;
-            font-size: 1.05rem;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .contact-btn:hover::before {
+            left: 100%;
         }
 
         .contact-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.5);
+        }
+
+        .contact-btn:active {
+            transform: translateY(-2px) scale(1.02);
         }
 
         /* Footer */
@@ -509,10 +664,10 @@
             <h2>김영우</h2>
             <p class="subtitle">동양미래대학교 컴퓨터소프트웨어공학과 3학년</p>
             <div class="hero-badges">
-                <span class="badge">React 18 + Vite</span>
-                <span class="badge">Node.js + Express</span>
-                <span class="badge">Claude AI API</span>
-                <span class="badge">Firebase Auth & Firestore</span>
+                <span class="badge">React 19 + Phaser 3</span>
+                <span class="badge">Node.js + Express 5</span>
+                <span class="badge">Claude AI Sonnet 3.5</span>
+                <span class="badge">게임형 인터랙티브 UI</span>
             </div>
         </div>
     </section>
@@ -524,17 +679,19 @@
             <p class="section-subtitle">개발자 소개</p>
             <div class="about-content">
                 <p>
-                    [첫 번째 문단: 본인의 개발 철학과 강점을 서술하세요.
-                    예: 저는 비즈니스 문제를 기술로 해결하는 과정에 매력을 느끼는 개발자입니다.
-                    특히 React와 TypeScript를 활용하여...]
+                    저는 <strong>기술로 교육적 가치를 창출</strong>하는 데 관심이 많은 풀스택 개발자입니다.
+                    단순히 기능을 구현하는 것을 넘어, 사용자가 실제로 성장할 수 있는 플랫폼을 만드는 것에 열정을 가지고 있습니다.
+                    React, Node.js, 그리고 AI API를 활용하여 현실적인 문제를 해결하는 웹 애플리케이션 개발에 집중하고 있습니다.
                 </p>
                 <p>
-                    [두 번째 문단: 이 프로젝트를 통해 특히 보여주고 싶은 역량을 서술하세요.
-                    예: 이 협상 시뮬레이터 프로젝트를 통해 AI API 통합부터 풀스택 개발까지...]
+                    이 협상 시뮬레이터 프로젝트를 통해 <strong>프론트엔드부터 백엔드, 게임 엔진 통합, AI API 연동까지</strong>
+                    풀스택 개발의 전 과정을 경험했습니다. 특히 Phaser 3 게임 엔진을 React와 통합하여 게임형 UI를 구현하고,
+                    Claude AI를 활용한 실시간 대화 시스템과 피드백 시스템을 설계하며, 사용자 경험을 극대화하는 방법을 깊이 고민했습니다.
                 </p>
                 <p>
-                    [세 번째 문단: 추가 소개 내용을 자유롭게 작성하세요.
-                    예: 현재는 사용자 중심의 웹 애플리케이션 개발에 집중하고 있으며...]
+                    현재는 사용자 중심의 웹 애플리케이션 개발에 집중하고 있으며,
+                    AI 기술을 실제 서비스에 효과적으로 통합하는 방법을 연구하고 있습니다.
+                    특히 <strong>교육 기술(EdTech)</strong> 분야에서 AI를 활용한 개인화 학습 경험을 제공하는 것에 관심이 많습니다.
                 </p>
             </div>
         </div>
@@ -574,31 +731,31 @@
                 <div class="skill-category">
                     <h3>🎨 Frontend</h3>
                     <div class="skill-tags">
-                        <span class="skill-tag">React 18</span>
+                        <span class="skill-tag">React 19</span>
+                        <span class="skill-tag">Phaser 3</span>
                         <span class="skill-tag">Vite</span>
-                        <span class="skill-tag">React Router</span>
+                        <span class="skill-tag">React Router v7</span>
                         <span class="skill-tag">Axios</span>
                         <span class="skill-tag">CSS3</span>
-                        <span class="skill-tag">Firebase SDK</span>
                     </div>
                 </div>
                 <div class="skill-category">
                     <h3>⚙️ Backend</h3>
                     <div class="skill-tags">
                         <span class="skill-tag">Node.js</span>
-                        <span class="skill-tag">Express</span>
+                        <span class="skill-tag">Express 5</span>
                         <span class="skill-tag">RESTful API</span>
                         <span class="skill-tag">Claude AI API</span>
-                        <span class="skill-tag">Firebase Admin</span>
+                        <span class="skill-tag">@anthropic-ai/sdk</span>
                     </div>
                 </div>
                 <div class="skill-category">
-                    <h3>🗄️ Database & Auth</h3>
+                    <h3>💾 Storage & Tools</h3>
                     <div class="skill-tags">
-                        <span class="skill-tag">Firestore</span>
-                        <span class="skill-tag">Firebase Authentication</span>
-                        <span class="skill-tag">Google OAuth</span>
-                        <span class="skill-tag">JWT Tokens</span>
+                        <span class="skill-tag">LocalStorage</span>
+                        <span class="skill-tag">Session Management</span>
+                        <span class="skill-tag">Sound Manager</span>
+                        <span class="skill-tag">Game Engine Integration</span>
                     </div>
                 </div>
             </div>
@@ -646,64 +803,84 @@
                 </div>
             </div>
 
-            <!-- 핵심 기능 1 -->
+            <!-- 핵심 기능 1: 게임형 UI -->
             <div class="feature-card">
-                <h5>🤖 AI 기반 실시간 협상 시뮬레이션</h5>
+                <h5>🎮 Phaser 3 기반 게임형 인터랙티브 UI</h5>
                 <p>
-                    Claude AI의 <strong>대화 능력을 활용한 현실적인 협상 상대 구현</strong>이 핵심입니다.
-                    각 시나리오마다 고유한 NPC 프로필(역할, 성격, 목표, 제약사항)을 설정하여, AI가 일관된 캐릭터로 대화를 진행합니다.
+                    <strong>Phaser 3 게임 엔진</strong>을 React와 통합하여 몰입감 있는 협상 환경을 구현했습니다.
+                    실시간 캐릭터 애니메이션으로 NPC의 감정 변화를 시각적으로 표현하고, 시나리오별 맞춤 배경으로 분위기를 연출합니다.
                 </p>
                 <p>
-                    백엔드에서는 <code>claudeService.js</code>를 통해 System Prompt를 동적으로 생성하고,
-                    대화 히스토리를 관리하여 맥락을 유지합니다. 프론트엔드는 실시간으로 메시지를 주고받으며,
-                    타이핑 인디케이터로 자연스러운 대화 경험을 제공합니다.
+                    메시지 전송, 성공, 실패 등의 상황에 맞는 <strong>사운드 효과</strong>를 추가하여 인터랙티브한 경험을 제공합니다.
+                    <code>GameScene.js</code>에서 Phaser 씬을 관리하고, <code>PhaserGame.jsx</code> 컴포넌트로 React와 연결했습니다.
                 </p>
                 <div class="tech-stack">
-                    <span class="tech-badge">Claude API 3.5 Sonnet</span>
-                    <span class="tech-badge">React Hooks</span>
-                    <span class="tech-badge">Axios</span>
-                    <span class="tech-badge">Real-time Messaging</span>
+                    <span class="tech-badge">Phaser 3</span>
+                    <span class="tech-badge">2D Game Engine</span>
+                    <span class="tech-badge">Character Animation</span>
+                    <span class="tech-badge">Sound Manager</span>
+                    <span class="tech-badge">Dynamic Backgrounds</span>
                 </div>
             </div>
 
-            <!-- 핵심 기능 2 -->
+            <!-- 핵심 기능 2: AI 선택지 & 실시간 피드백 -->
             <div class="feature-card">
-                <h5>📊 협상 성과 분석 & 피드백 시스템</h5>
+                <h5>🤖 AI 응답 선택지 & 실시간 메시지 피드백</h5>
                 <p>
-                    대화가 끝난 후 "분석 보기" 버튼을 통해 <strong>AI가 협상 과정을 종합적으로 평가</strong>합니다.
-                    협상 점수(100점 만점), 강점, 약점, 개선 제안, 사용된 전략 등을 구조화된 데이터로 제공하여
-                    사용자가 자신의 협상 스킬을 객관적으로 파악할 수 있습니다.
+                    대화가 막막할 때 <strong>AI가 3가지 전략적 응답을 추천</strong>해주는 시스템을 구현했습니다. (최대 3회 사용 가능)
+                    사용자의 현재 협상 맥락을 분석하여, 공감형/논리형/전략형 등 다양한 접근 방식을 제안합니다.
                 </p>
                 <p>
-                    분석 기능은 별도의 API 엔드포인트(<code>/api/conversation/analyze</code>)로 구현되어,
-                    Claude AI에게 전체 대화 맥락과 함께 분석 요청을 전송합니다.
-                    프론트엔드는 모달 UI로 분석 결과를 시각적으로 표현합니다.
+                    각 메시지마다 <strong>실시간 피드백</strong>(탁월/좋음/보통/미흡)을 제공하고, NPC의 감정 상태와 호감도를 실시간으로 추적합니다.
+                    별점 평가 시스템(1-5점)으로 협상 진행 상황을 직관적으로 확인할 수 있습니다.
+                    <code>/api/conversation/suggestions</code> 엔드포인트로 구현되었습니다.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-badge">Claude AI 3.5</span>
+                    <span class="tech-badge">Context Analysis</span>
+                    <span class="tech-badge">Real-time Feedback</span>
+                    <span class="tech-badge">Emotion Tracking</span>
+                    <span class="tech-badge">Star Rating</span>
+                </div>
+            </div>
+
+            <!-- 핵심 기능 3: 협상 분석 시스템 -->
+            <div class="feature-card">
+                <h5>📊 종합 협상 분석 & 성장 추적 시스템</h5>
+                <p>
+                    협상 종료 후 <strong>AI가 100점 만점으로 성과를 평가</strong>하고, 강점/약점/개선 제안을 제공합니다.
+                    사용된 협상 전략, 커뮤니케이션 스타일, 목표 달성도 등을 종합적으로 분석하여 맞춤형 피드백을 생성합니다.
+                </p>
+                <p>
+                    모든 대화는 <strong>LocalStorage에 자동 저장</strong>되어 언제든지 과거 협상 내역을 조회할 수 있습니다.
+                    히스토리 페이지에서 각 협상의 점수, 피드백을 확인하고 다시 연습할 수 있습니다.
+                    진행률 프로그레스 바로 각 단계별 진행 상황을 실시간으로 확인 가능합니다.
                 </p>
                 <div class="tech-stack">
                     <span class="tech-badge">AI Analysis</span>
-                    <span class="tech-badge">Modal UI</span>
-                    <span class="tech-badge">Structured Data</span>
-                    <span class="tech-badge">Score Visualization</span>
+                    <span class="tech-badge">LocalStorage API</span>
+                    <span class="tech-badge">Progress Tracking</span>
+                    <span class="tech-badge">History Management</span>
+                    <span class="tech-badge">Achievement System</span>
                 </div>
             </div>
 
-            <!-- 핵심 기능 3 -->
+            <!-- 핵심 기능 4: 시나리오 시스템 -->
             <div class="feature-card">
-                <h5>🔐 사용자 인증 & 대화 기록 관리</h5>
+                <h5>🎯 다양한 협상 시나리오 & 난이도 시스템</h5>
                 <p>
-                    <strong>Firebase Authentication</strong>을 통해 이메일/비밀번호 및 Google OAuth 로그인을 지원합니다.
-                    React Context API로 전역 인증 상태를 관리하고, Private Route로 보호된 페이지 접근을 제어합니다.
+                    <strong>5가지 실전 시나리오</strong>(연봉협상, 계약협상, 프로젝트 관리, 부동산 협상, 팀 리소스 배분)를 제공합니다.
+                    각 시나리오는 초급/중급/고급 난이도로 구분되어 단계적 학습이 가능합니다.
                 </p>
                 <p>
-                    모든 협상 대화는 <strong>Firestore</strong>에 자동 저장되어, 사용자가 언제든지 과거 대화 내역을 조회할 수 있습니다.
-                    서버에서는 Firebase Admin SDK를 사용하여 ID Token을 검증하고, 사용자별 데이터를 안전하게 관리합니다.
+                    시나리오마다 고유한 <strong>NPC 프로필</strong>(역할, 성격, 목표, 제약사항)을 설정하여 다양한 협상 스타일을 경험할 수 있습니다.
+                    <code>scenarios.js</code>에서 데이터 모델링하고, RESTful API로 시나리오 정보를 제공합니다.
                 </p>
                 <div class="tech-stack">
-                    <span class="tech-badge">Firebase Auth</span>
-                    <span class="tech-badge">Firestore</span>
-                    <span class="tech-badge">Context API</span>
-                    <span class="tech-badge">JWT Verification</span>
-                    <span class="tech-badge">Private Routes</span>
+                    <span class="tech-badge">5 Scenarios</span>
+                    <span class="tech-badge">Difficulty Levels</span>
+                    <span class="tech-badge">NPC Profiling</span>
+                    <span class="tech-badge">Dynamic System Prompts</span>
                 </div>
             </div>
 
@@ -711,13 +888,14 @@
             <div class="project-section">
                 <h4>👨‍💻 개발 과정 & 구현 내용</h4>
                 <ul class="bullet-list">
-                    <li><strong>풀스택 개발:</strong> 프론트엔드(React)부터 백엔드(Node.js/Express)까지 전체 아키텍처 설계 및 구현</li>
-                    <li><strong>AI API 통합:</strong> Claude AI API를 연동하여 동적 System Prompt 생성 및 대화 히스토리 관리 로직 구현</li>
-                    <li><strong>Firebase 통합:</strong> Authentication 및 Firestore 데이터베이스 설계, 실시간 데이터 동기화 구현</li>
-                    <li><strong>사용자 인증 시스템:</strong> React Context를 활용한 전역 인증 상태 관리, Private Route 보호 구현</li>
-                    <li><strong>RESTful API 설계:</strong> 시나리오 관리, 대화 처리, 분석 기능을 위한 8개의 API 엔드포인트 설계 및 구현</li>
-                    <li><strong>UI/UX 디자인:</strong> 직관적인 대화 인터페이스, 모달 기반 분석 결과 표시, 반응형 디자인 구현</li>
-                    <li><strong>시나리오 시스템 설계:</strong> 5가지 협상 시나리오의 NPC 프로필, 목표, 팁 등 데이터 모델링</li>
+                    <li><strong>게임 엔진 통합:</strong> Phaser 3를 React와 통합하여 게임형 UI 구현, GameScene.js로 씬 관리 및 캐릭터 애니메이션 구현</li>
+                    <li><strong>AI 시스템 설계:</strong> Claude AI API를 활용한 실시간 대화, AI 응답 선택지 시스템(최대 3회), 메시지별 피드백 시스템 구현</li>
+                    <li><strong>감정 추적 시스템:</strong> NPC의 호감도와 감정 상태를 실시간으로 추적하고, 별점 평가(1-5점)로 협상 진행도 시각화</li>
+                    <li><strong>사운드 시스템:</strong> soundManager.js를 통한 인터랙티브 오디오 피드백 (메시지 전송, 성공, 실패 등)</li>
+                    <li><strong>RESTful API 설계:</strong> 8개의 API 엔드포인트 (시나리오 조회, 대화 시작/전송, AI 선택지, 협상 분석 등)</li>
+                    <li><strong>데이터 관리:</strong> LocalStorage 기반 대화 기록 저장 및 히스토리 페이지 구현, 세션 관리 시스템 구축</li>
+                    <li><strong>시나리오 시스템:</strong> 5가지 협상 시나리오 설계, 난이도별 구분(초급/중급/고급), NPC 프로필 및 목표 데이터 모델링</li>
+                    <li><strong>UI/UX 디자인:</strong> 게임형 채팅 인터페이스, 실시간 피드백 패널, 진행률 프로그레스 바, 업적 토스트 알림 등</li>
                 </ul>
             </div>
 
@@ -726,27 +904,28 @@
                 <h4>📊 프로젝트 성과</h4>
                 <div class="results-grid">
                     <div class="result-card">
+                        <h6>게임 엔진</h6>
+                        <p>Phaser 3 완전 통합</p>
+                    </div>
+                    <div class="result-card">
                         <h6>시나리오</h6>
-                        <p>5가지 협상 상황</p>
+                        <p>5가지 난이도별 협상</p>
                     </div>
                     <div class="result-card">
-                        <h6>기능 구현</h6>
-                        <p>8개 API 엔드포인트</p>
+                        <h6>AI 기능</h6>
+                        <p>선택지 + 실시간 피드백</p>
                     </div>
                     <div class="result-card">
-                        <h6>인증 시스템</h6>
-                        <p>Firebase 완전 통합</p>
-                    </div>
-                    <div class="result-card">
-                        <h6>AI 응답</h6>
-                        <p>2-5초 실시간 대화</p>
+                        <h6>API 엔드포인트</h6>
+                        <p>8개 RESTful API</p>
                     </div>
                 </div>
                 <ul class="bullet-list" style="margin-top: 2rem;">
-                    <li>풀스택 웹 애플리케이션 완성: 프론트엔드부터 백엔드, 데이터베이스까지 전체 개발 완료</li>
-                    <li>Claude AI API 성공적 통합: 자연스러운 대화 및 분석 기능 구현</li>
-                    <li>Firebase 기반 사용자 관리: 인증, 데이터 저장, 실시간 동기화 구현</li>
-                    <li>직관적인 UX: 채팅 UI, 실시간 타이핑 인디케이터, 모달 분석 화면 등</li>
+                    <li>게임형 웹 애플리케이션 완성: Phaser 3 게임 엔진과 React를 성공적으로 통합하여 인터랙티브 UI 구현</li>
+                    <li>고급 AI 시스템 구축: Claude AI를 활용한 실시간 대화, AI 응답 선택지, 감정 추적, 협상 분석 시스템 완성</li>
+                    <li>멀티 피드백 시스템: 메시지별 실시간 피드백, 별점 평가, 감정 상태 바, 최종 협상 분석 등 다층적 피드백 제공</li>
+                    <li>완전한 데이터 관리: LocalStorage 기반 히스토리 관리, 세션 관리, 진행률 추적 시스템 구현</li>
+                    <li>몰입형 사용자 경험: 캐릭터 애니메이션, 사운드 효과, 다이나믹 배경, 업적 시스템 등으로 게임 경험 제공</li>
                 </ul>
             </div>
 
@@ -756,24 +935,29 @@
                 <div class="feature-card">
                     <h5>✅ 배운 점</h5>
                     <p>
-                        이 프로젝트를 통해 <strong>AI API를 실제 서비스에 통합하는 전체 과정</strong>을 경험했습니다.
-                        특히 Claude AI의 System Prompt 설계와 대화 맥락 관리의 중요성을 깊이 이해하게 되었습니다.
-                        또한 Firebase의 다양한 서비스(Auth, Firestore)를 실전에서 활용하며,
-                        클라우드 기반 백엔드 설계 역량을 크게 향상시켰습니다.
+                        이 프로젝트를 통해 <strong>게임 엔진을 웹 애플리케이션과 통합하는 전체 과정</strong>을 경험했습니다.
+                        Phaser 3와 React의 라이프사이클을 조화롭게 관리하는 방법, 게임 오브젝트와 React 컴포넌트 간의 데이터 통신 설계 등
+                        게임형 웹 개발의 핵심 기술을 체득했습니다.
                     </p>
                     <p>
-                        React Context API를 활용한 전역 상태 관리, RESTful API 설계 원칙, 그리고 사용자 인증 플로우 구현 등
-                        풀스택 개발자로서 필요한 핵심 역량들을 실무 수준으로 체득할 수 있었습니다.
+                        Claude AI의 <strong>고급 프롬프트 엔지니어링</strong> 경험도 큰 성과였습니다.
+                        AI 응답 선택지 생성, 실시간 감정 분석, 메시지 피드백, 종합 협상 분석 등 다양한 AI 기능을 설계하며,
+                        System Prompt 구조화, 맥락 관리, JSON 응답 파싱 등의 실무 역량을 크게 향상시켰습니다.
+                    </p>
+                    <p>
+                        LocalStorage를 활용한 클라이언트 측 데이터 관리, 사운드 시스템 설계, 실시간 UI 업데이트 등
+                        사용자 경험을 극대화하는 다양한 기술적 도전을 해결하며 풀스택 개발 역량을 종합적으로 성장시킬 수 있었습니다.
                     </p>
                 </div>
                 <div class="feature-card">
                     <h5>🎯 향후 개선 계획</h5>
                     <ul class="bullet-list">
-                        <li><strong>협상 점수 시스템:</strong> 시나리오별 목표 달성도를 정량화하여 사용자의 성장을 추적</li>
-                        <li><strong>커스텀 시나리오:</strong> 사용자가 직접 협상 상황을 만들고 공유할 수 있는 기능</li>
-                        <li><strong>대시보드 강화:</strong> 협상 통계, 성장 그래프, 강약점 분석 등 상세한 인사이트 제공</li>
-                        <li><strong>테스트 코드:</strong> Jest와 React Testing Library를 활용한 단위/통합 테스트 추가</li>
-                        <li><strong>성능 최적화:</strong> React.memo, useMemo 등을 활용한 렌더링 최적화</li>
+                        <li><strong>회원 시스템 고도화:</strong> Firebase Authentication 통합, 클라우드 기반 대화 기록 동기화</li>
+                        <li><strong>통계 & 대시보드:</strong> 협상 성과 그래프, 성장 추이 시각화, 강점/약점 트렌드 분석</li>
+                        <li><strong>콘텐츠 확장:</strong> 10개 이상 추가 시나리오, 사용자 커스텀 시나리오 생성 기능</li>
+                        <li><strong>소셜 기능:</strong> 리더보드 및 랭킹 시스템, 친구와 결과 공유, 협상 기록 공개/비공개 설정</li>
+                        <li><strong>고급 기능:</strong> 음성 인식 기반 대화 입력, TTS NPC 음성, 멀티플레이 협상 연습</li>
+                        <li><strong>성능 최적화:</strong> React.memo, useMemo를 활용한 렌더링 최적화, 이미지 lazy loading</li>
                     </ul>
                 </div>
             </div>
