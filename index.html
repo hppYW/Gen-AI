@@ -346,6 +346,64 @@
             color: var(--text-light);
         }
 
+        .demo-section {
+            margin: 3rem auto 4rem;
+            max-width: 900px;
+        }
+
+        .demo-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            background: #000;
+        }
+
+        .demo-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .demo-title {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .live-demo-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 1.2rem 2.5rem;
+            background: var(--gradient-3);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.35);
+            margin: 0 auto 2rem;
+        }
+
+        .live-demo-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(79, 172, 254, 0.5);
+        }
+
+        .demo-section-wrapper {
+            text-align: center;
+        }
+
         .project-section {
             margin-bottom: 4rem;
         }
@@ -777,6 +835,23 @@
                 <p>AI 기반 협상 연습 플랫폼</p>
             </div>
 
+            <!-- 시연 영상 -->
+            <div class="demo-section">
+                <div class="demo-section-wrapper">
+                    <a href="https://generativeai-3bf99.web.app/" target="_blank" class="live-demo-btn">
+                        🚀 라이브 데모 체험하기
+                    </a>
+                </div>
+                <h4 class="demo-title">🎥 프로젝트 시연 영상</h4>
+                <div class="demo-container">
+                    <iframe
+                        src="https://www.youtube.com/embed/NPzfvDX5eHY"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
             <!-- 문제 정의 -->
             <div class="project-section">
                 <h4>📌 문제 정의 & 목표</h4>
@@ -976,19 +1051,24 @@
             <h2 class="section-title">Contact</h2>
             <p class="section-subtitle">프로젝트에 대해 더 알고 싶으시거나 협업을 원하시면 연락주세요</p>
             <div class="contact-links">
+                <a href="https://generativeai-3bf99.web.app/" target="_blank" class="contact-btn" style="background: var(--gradient-3);">
+                    🚀 라이브 데모
+                </a>
                 <a href="https://github.com/hppYW" target="_blank" class="contact-btn">
                     💻 GitHub
                 </a>
                 <a href="mailto:[duddnkim1212@gmail.com]" class="contact-btn">
                     📧 Email
                 </a>
-                
             </div>
             <div style="margin-top: 3rem; text-align: center; color: var(--text-light);">
-                <p><strong>🔗 프로젝트 GitHub 링크:</strong></p>
+                <p><strong>🔗 프로젝트 링크:</strong></p>
                 <p style="margin-top: 0.5rem;">
-                    <a href="https://github.com/hppYW/Gen-AI" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">
-                        github.com/hppYW/Gen-AI
+                    <a href="https://github.com/hppYW/Gen-AI" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: 600; margin-right: 2rem;">
+                        GitHub 저장소
+                    </a>
+                    <a href="https://generativeai-3bf99.web.app/" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">
+                        라이브 데모
                     </a>
                 </p>
             </div>
